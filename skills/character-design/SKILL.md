@@ -94,3 +94,10 @@ Changes the owner asks for become a new mission or an amended contract for M3, n
 Invoke `guild-mission` with this template, the game slug and the arguments.
 It plans `mission.md`, `contract.md` and `features.json` from the tables above, shows the contract for approval, then calls Mission Control.
 Invoking this skill counts as opting in to its multi-agent mission.
+
+## Judging generated art (lesson from the first run)
+
+When creatures are produced by an image or mesh generator, judges score in this order: appeal to the target players, readability at phone size, rarity reads as rarer, and only then fidelity to the written spec.
+Fidelity is checked against the name-defining feature only (Kettle Owl must read as a kettle and an owl), never against every proportion in a spec written for another medium.
+A judge who rejects a candidate must say why a player would like it less, not only how it differs from the document.
+The Director reviews a contact sheet of every candidate before accepting a mass rejection; in the first run the panel rejected 16 of 18 creatures that the owner's lead then accepted on sight.
