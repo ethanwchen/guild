@@ -125,11 +125,18 @@ const runWorker = async (f, attempt, blocking) => {
   return { handoff: h }
 }
 
+/* A feature may map each validator to the assertions it checks (the contract's "Checked by" column); default is all. */
+const scopeFor = (f, v, scope) => {
+  const own = f.validatorScope && f.validatorScope[v]
+  return own ? scope.filter((a) => own.includes(a)) : scope
+}
+
 const runValidators = async (f, attempt, handoff, scope, recheck) => {
   const wm = workerModel(f)
-  const vs = await parallel((f.validators || []).map((v) => () => {
+  const active = (f.validators || []).filter((v) => scopeFor(f, v, scope).length)
+  const vs = await parallel(active.map((v) => () => {
     if (!take()) return Promise.resolve(null)
-    return agent(validatorPrompt(f, v, attempt, handoff, scope, recheck), {
+    return agent(validatorPrompt(f, v, attempt, handoff, scopeFor(f, v, scope), recheck), {
       label: `${f.id}:${v}${recheck ? ':recheck' : ''}`,
       phase: recheck ? 'Fix' : 'Validate',
       schema: VERDICT,
@@ -138,7 +145,7 @@ const runValidators = async (f, attempt, handoff, scope, recheck) => {
   }))
   const ok = vs.filter(Boolean)
   /* R2: only blocking findings that cite an assertion in scope count. */
-  const blocking = ok.flatMap((v) => (v.blocking || []).filter((b) => scope.includes(b.assertion)))
+  const blocking = ok.flatMap((v) => (v.blocking || []).filter((b) => scopeFor(f, v.validator, scope).includes(b.assertion)))
   const nonBlocking = ok.flatMap((v) => (v.nonBlocking || []).map((n) => `[${v.validator}] ${n}`))
   const failed = [...new Set(blocking.map((b) => b.assertion))]
   return { verdicts: ok.length, blocking, nonBlocking, failed }

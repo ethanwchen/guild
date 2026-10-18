@@ -21,6 +21,7 @@ Paths below: `<guild>` is where guild is installed in this project (`.guild/` by
    Write them so a validator can answer pass or fail with evidence; "feels fun" is not an assertion, "the first reward lands within 30 seconds in the playtest route" is.
 5. Fill `features.json`: one feature per artifact, each with one worker role, one to three validator roles on a different model, the assertions it owns, its inputs, its output path and its dependencies.
    Every assertion must belong to at least one feature.
+   Add `validatorScope` (validator role to the assertion ids it checks, from the contract's "Checked by" column) so a validator never blocks on an assertion it does not own.
    Give parallel features disjoint output paths.
 6. Show the user the contract and the feature table and get approval (rule R1).
    If the user already told you to run the mission, show it and proceed, saying so in one line.

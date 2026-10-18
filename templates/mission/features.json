@@ -8,6 +8,7 @@
       "title": "<one line>",
       "agent": "<crew role>",
       "validators": ["<crew role>", "<crew role>"],
+      "validatorScope": { "<crew role>": ["A1"], "<crew role>": ["A2"] },
       "assertions": ["A1", "A2"],
       "inputs": ["<paths the worker must read>"],
       "output": "<path the worker writes>",
