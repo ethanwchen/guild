@@ -1,0 +1,20 @@
+{
+  "mission": "<nn>-<slug>",
+  "budget": { "maxAgentRuns": 30, "maxAttemptsPerFeature": 2, "stopAfterEscalations": 2 },
+  "features": [
+    {
+      "id": "F1",
+      "milestone": "M1",
+      "title": "<one line>",
+      "agent": "<crew role>",
+      "validators": ["<crew role>", "<crew role>"],
+      "assertions": ["A1", "A2"],
+      "inputs": ["<paths the worker must read>"],
+      "output": "<path the worker writes>",
+      "dependsOn": [],
+      "state": "pending",
+      "attempts": 0,
+      "failedAssertions": []
+    }
+  ]
+}

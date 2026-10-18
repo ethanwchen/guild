@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "guild verdict",
+  "description": "Written by a validator for one feature attempt.",
+  "type": "object",
+  "required": ["featureId", "attempt", "validator", "status", "assertions", "blocking", "nonBlocking"],
+  "properties": {
+    "featureId": { "type": "string" },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "validator": { "type": "string" },
+    "status": { "enum": ["pass", "fail"] },
+    "assertions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "pass", "evidence"],
+        "properties": { "id": { "type": "string" }, "pass": { "type": "boolean" }, "evidence": { "type": "string" } }
+      }
+    },
+    "blocking": {
+      "type": "array",
+      "description": "Only findings that cite a failed contract assertion. Anything else is nonBlocking.",
+      "items": {
+        "type": "object",
+        "required": ["assertion", "problem", "fix"],
+        "properties": { "assertion": { "type": "string" }, "problem": { "type": "string" }, "fix": { "type": "string" } }
+      }
+    },
+    "nonBlocking": { "type": "array", "items": { "type": "string" }, "description": "Suggestions; they go to backlog.md and never trigger a retry." }
+  }
+}

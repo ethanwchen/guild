@@ -1,0 +1,13 @@
+{
+  "name": "guild",
+  "version": "0.1.0",
+  "description": "A crew for your coding agent: specialist agents, procedure skills and a mission orchestrator that stops agents looping without producing value.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "install-into": "node scripts/install.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "engines": { "node": ">=20" }
+}

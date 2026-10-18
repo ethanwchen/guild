@@ -1,0 +1,16 @@
+name: check
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/check.mjs
+      - name: Install into a scratch project and verify it is current
+        run: |
+          mkdir -p /tmp/proj
+          node scripts/install.mjs /tmp/proj --factory
+          node scripts/install.mjs /tmp/proj --factory --check

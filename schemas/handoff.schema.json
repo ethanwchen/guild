@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "guild handoff",
+  "description": "Written by a worker after every attempt at a feature.",
+  "type": "object",
+  "required": ["featureId", "attempt", "output", "assertionsAddressed", "newValue"],
+  "properties": {
+    "featureId": { "type": "string" },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "output": { "type": "string", "description": "Path of the artifact this attempt produced." },
+    "assertionsAddressed": { "type": "array", "items": { "type": "string" } },
+    "newValue": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "What this run added that was not already in the inputs or the vault. Empty means the run is rejected unvalidated."
+    },
+    "reused": { "type": "array", "items": { "type": "string" } },
+    "openQuestions": { "type": "array", "items": { "type": "string" } },
+    "outOfScopeIdeas": { "type": "array", "items": { "type": "string" }, "description": "Goes to backlog.md, never into this mission." }
+  }
+}
