@@ -16,7 +16,7 @@ The design goal is one sentence: **every agent run produces new, checkable value
 | `workflows/mission-control.js` | The one loop that runs every mission: workers, cross-model validators, one scoped fix, escalation |
 | `templates/mission/` | `mission.md`, `contract.md`, `features.json`, `backlog.md` |
 | `schemas/` | The handoff every worker writes and the verdict every validator writes |
-| `docs/framework.md` | The full design: roster, mission model, orchestration patterns, the anti-loop rules | |
+| `docs/framework.md` | The full design: roster, mission model, orchestration patterns, the anti-loop rules |
 
 ### The crew
 
