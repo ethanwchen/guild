@@ -36,15 +36,21 @@ const files = (dir) =>
     return statSync(p).isDirectory() ? files(p) : [p];
   });
 
+/* Paths guild wrote last time; files without a text marker (workflows, schemas) are recognised through it. */
+const MANIFEST = join(PROJECT, ".guild", "manifest.json");
+const previous = new Set(existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, "utf8")) : []);
+const installed = [];
+
 let drift = 0;
 let written = 0;
 let skipped = 0;
 
 function place(dest, stamped) {
+  installed.push(relative(PROJECT, dest).split("\\").join("/"));
   if (existsSync(dest)) {
     const current = readFileSync(dest, "utf8");
     if (current === stamped) return;
-    const ours = current.includes(MARK);
+    const ours = current.includes(MARK) || previous.has(relative(PROJECT, dest).split("\\").join("/"));
     if (CHECK) {
       if (ours) {
         drift++;
