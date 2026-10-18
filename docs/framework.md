@@ -5,31 +5,28 @@ status: draft
 
 # Agent and skill framework
 
-How an AI game studio turns research into designed, built and tested games with a team of agents, modelled on Factory's droids, skills and missions.
-It is written so the same definitions run in Claude Code and in Factory Droid.
+How an AI game studio turns research into designed, built and tested games with a team of agents.
 
 The design goal is **every agent run produces new, checkable value, or the run stops**.
 Agents never talk to each other, never spawn each other, and never judge work against a bar that moved after the work started.
 
 ## 1. The layers
 
-| Layer | Factory name | Here | What it holds |
-|---|---|---|---|
-| Always-on rules | `AGENTS.md` | `AGENTS.md` (imported by `CLAUDE.md`) | Studio conventions, ethics rule, model routing |
-| Specialists | Droids | `.claude/agents/<name>.md`, mirrored to `.factory/droids/` | One role, one model, a tool boundary, a report schema |
-| Procedures | Skills | `.claude/skills/<name>/SKILL.md`, mirrored to `.factory/skills/` | How a job runs: which mission template, which agents, which gates |
-| Units of work | Missions | `missions/<nn>-<name>/` (or `games/<slug>/missions/` in a multi-game repo) | Goal, contract, feature list with state, handoffs |
-| Execution | Mission Control | `.claude/workflows/mission-control.js` | The one loop that runs features, validates them and enforces budgets |
-| Shared memory | Mission `library/` | A Markdown or Obsidian vault, for example `vault/` | Teardowns, psychology, pillars, decisions, known facts |
+| Layer | Here | What it holds |
+|---|---|---|
+| Always-on rules | `AGENTS.md` (imported by `CLAUDE.md`) | Studio conventions, ethics rule, model routing |
+| Specialists | `.claude/agents/<name>.md` | One role, one model, a tool boundary, a report schema |
+| Procedures | `.claude/skills/<name>/SKILL.md` | How a job runs: which mission template, which agents, which gates |
+| Units of work | `missions/<nn>-<name>/` (or `games/<slug>/missions/` in a multi-game repo) | Goal, contract, feature list with state, handoffs |
+| Execution | `.claude/workflows/mission-control.js` | The one loop that runs features, validates them and enforces budgets |
+| Shared memory | A Markdown or Obsidian vault, for example `vault/` | Teardowns, psychology, pillars, decisions, known facts |
 
 **Agents are who, skills are how, missions are what and when, the vault is what we know.**
 The main session is the **Director**: it plans missions with the user, starts Mission Control, reads results, and owns the human gates.
 
-### One source, two runtimes
+### One source
 
-guild's `crew/` and `skills/` are canonical.
-`node scripts/install.mjs <project> --factory` writes `.factory/droids/` and `.factory/skills/` from them, mapping fields (`tools` lists to Factory tool ids or categories, `model` to a Factory model id or `inherit` where Factory has no equivalent).
-Nobody edits `.factory/` by hand; the quality gate fails if the mirror is stale.
+guild's `crew/` and `skills/` are canonical; `node scripts/install.mjs <project>` copies them into a project, and `--check` fails if an installed copy is stale.
 
 ## 2. Agent roster
 
@@ -56,7 +53,7 @@ Each agent is either a **worker** (produces an artifact) or a **validator** (ret
 | `feasibility-judge` | validator | Opus | new | Engine limits, performance budget, exploit surface, build cost |
 | `red-team` | validator | Opus | new | The worst player: griefing, exploits, economy breaks |
 | `design-scrutineer` | validator | Opus | new | Checks a design artifact against its contract assertions and the vault evidence chain |
-| `code-scrutineer` | validator | Opus | new | Reviews one builder's diff against its feature's assertions (the Factory scrutiny reviewer) |
+| `code-scrutineer` | validator | Opus | new | Reviews one builder's diff against its feature's assertions |
 | `player-council` | validator | Fable x8 | exists | Simulated players; reports in a fixed schema |
 | `playtester` | worker | Haiku | exists | Drives the scripted route in Studio and collects evidence |
 | `playtester-feel` | validator | Fable | new | Judges the evidence as an experience: fun, hook moments, energy drops, clip-ability |
@@ -154,26 +151,26 @@ One reusable workflow runs every mission; skills only choose the template and th
 | R4 | **Attempt budget** | At most 2 attempts per feature, plus a mission-wide cap on agent runs | Retry spirals |
 | R5 | **Progress or stop** | A fix must turn at least one failing assertion into a pass; if the failing set is the same or larger, escalate | Re-trying the same approach |
 | R6 | **Scoped re-review** | The second validation checks only the failed assertions and regressions | A fresh full review finding new nits every round |
-| R7 | **Novelty ledger** | `vault/known-facts.md` lists what we already know, with sources; researchers receive it and must return only new facts; a run with fewer than 5 new confirmed facts marks the topic `saturated` until a trigger (game update, new rival) | Research that rediscovers the same facts |
+| R7 | `vault/known-facts.md` lists what we already know, with sources; researchers receive it and must return only new facts; a run with fewer than 5 new confirmed facts marks the topic `saturated` until a trigger (game update, new rival) | Research that rediscovers the same facts |
 | R8 | **Distinct seeds** | Concept workers get pre-assigned, deliberately different seeds; a dedupe pass merges concepts sharing a loop and twist; a sprint never re-runs with the same brief | Ten versions of one idea |
 | R9 | **Files, not chat** | Agents read files and write one handoff; nothing is passed as long prompt text | Context bloat and agents echoing each other |
 | R10 | **Cross-model validation** | Worker and validator on different models | Self-agreement |
 | R11 | **Value declared** | Every handoff lists `newValue`; Mission Control rejects an empty one without validating it | Runs that only restate inputs |
-| R12 | **Written stop conditions** | `mission.md` says when the mission ends: all assertions pass, budget spent, or two features escalated | Missions that never end |
+| R12 | `mission.md` says when the mission ends: all assertions pass, budget spent, or two features escalated | Missions that never end |
 
 ## 6. Skills (each one is a mission template)
 
 | Skill | Status | Milestones and agents | Contract highlights | Human gate |
 |---|---|---|---|---|
 | `/teardown <game> [dimensions]` | new | M1 `teardown-analyst` per dimension; M2 `psychologist` hook notes; validators `design-scrutineer`, `ethics-auditor` | Every number tagged with confidence and a URL; every hook has a verdict | None; adds to the novelty ledger |
-| `/psych-lens <doc or build>` | new | `psychologist` worker; `ethics-auditor` validator | Hook map: used, missing, crossing the line; forecast per session, day and week loop | Ethics blockers |
+| `/psych-lens <doc or build>` | `psychologist` worker; `ethics-auditor` validator | Hook map: used, missing, crossing the line; forecast per session, day and week loop | Ethics blockers |
 | `/concept-sprint <brief>` | new | M1 4-6 `concept-designer` with distinct seeds; M2 scoring by `player-council`, `feasibility-judge`, `ethics-auditor`, `psychologist` | Format and pillar coverage per concept; scorecard | **User picks one** |
-| `/story-bible <slug>` | new | `storyteller` and `creature-designer`; `player-council` (design) | Tone, cast, biome lore, update arcs | User approves tone |
-| `/creature-batch <slug> <set>` | new | `creature-designer`; `feasibility-judge`, `licence-checker` (originality) | Rarity ladder followed, no existing IP, images exist | User approves the set |
-| `/economy-sim <slug>` | new | `economy-modeler`; `ethics-auditor` | Time to each gate for a free player; no wall sold next to a paid skip | Walls flagged |
-| `/build-module <slug> <module>` | new | `builder` in a worktree; `code-scrutineer`, `red-team` | The project quality gate passes; contract names and remotes respected | Merge |
-| `/playtest-panel <slug>` | new | `playtester` then `playtester-breaker` drive in turn (one Studio driver at a time); `playtester-feel` and `playtester-breaker` judge | Zero errors on the route; first-60-seconds beats land | Blockers fixed |
-| `/live-ops-plan <slug>` | later | `trend-scout`, `storyteller`, `systems-designer`; `ethics-auditor` | Four weekly updates, each with a story beat and a system | User approves |
+| `/story-bible <slug>` | `storyteller` and `creature-designer`; `player-council` (design) | Tone, cast, biome lore, update arcs | User approves tone |
+| `/creature-batch <slug> <set>` | `creature-designer`; `feasibility-judge`, `licence-checker` (originality) | Rarity ladder followed, no existing IP, images exist | User approves the set |
+| `/economy-sim <slug>` | `economy-modeler`; `ethics-auditor` | Time to each gate for a free player; no wall sold next to a paid skip | Walls flagged |
+| `/build-module <slug> <module>` | `builder` in a worktree; `code-scrutineer`, `red-team` | The project quality gate passes; contract names and remotes respected | Merge |
+| `/playtest-panel <slug>` | `playtester` then `playtester-breaker` drive in turn (one Studio driver at a time); `playtester-feel` and `playtester-breaker` judge | Zero errors on the route; first-60-seconds beats land | Blockers fixed |
+| `/live-ops-plan <slug>` | `trend-scout`, `storyteller`, `systems-designer`; `ethics-auditor` | Four weekly updates, each with a story beat and a system | User approves |
 | `/new-game` | exists | Becomes a chain of the missions above (research, concept, design, build stages, playtest, launch) | | Its existing gates |
 | `/new-style`, `/player-council`, `/audio-library` | exist | Unchanged; `player-council` gains the verdict schema | | |
 

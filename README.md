@@ -1,7 +1,7 @@
 # guild
 
 **A crew for your coding agent.**
-guild gives Claude Code (and Factory Droid) a crew of specialist agents, procedure skills and one mission orchestrator, so a single session can run research, design, build and playtest work the way a small studio would.
+guild gives Claude Code a crew of specialist agents, procedure skills and one mission orchestrator, so a single session can run research, design, build and playtest work the way a small studio would.
 
 It was built for AI-assisted game development, with Roblox as the first platform, but the mission model works for any project.
 
@@ -62,7 +62,6 @@ A worker and its validator never share a model.
 ```sh
 git clone https://github.com/ethanwchen/guild
 node guild/scripts/install.mjs path/to/your-project            # Claude Code
-node guild/scripts/install.mjs path/to/your-project --factory  # plus Factory droids and skills
 node guild/scripts/install.mjs path/to/your-project --check     # exit 1 if the install is stale
 ```
 
@@ -84,12 +83,8 @@ Every skill ends in `guild-mission`, which plans the mission files, asks you to 
 
 ## Requirements
 
-- Claude Code with subagents and the Workflow tool, or Factory Droid (droids and skills; Mission Control itself needs a workflow runner).
+- Claude Code with subagents and the Workflow tool.
 - Node 20 or newer for the installer.
-
-## Credits
-
-The mission model is inspired by Factory's droids, skills and missions.
 
 ## License
 

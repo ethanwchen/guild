@@ -12,5 +12,5 @@ jobs:
       - name: Install into a scratch project and verify it is current
         run: |
           mkdir -p /tmp/proj
-          node scripts/install.mjs /tmp/proj --factory
-          node scripts/install.mjs /tmp/proj --factory --check
+          node scripts/install.mjs /tmp/proj
+          node scripts/install.mjs /tmp/proj --check
