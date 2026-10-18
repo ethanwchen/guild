@@ -9,13 +9,13 @@ The design goal is one sentence: **every agent run produces new, checkable value
 
 ## What is inside
 
-| Folder | What it is | Factory equivalent |
-|---|---|---|
-| `crew/` | 26 role files: one job, one model, a tool boundary, a report format | Droids |
-| `skills/` | Procedures that turn a goal into a mission: `teardown`, `psych-lens`, `concept-sprint`, `character-design`, `story-bible`, `economy-sim`, `build-module`, `playtest-panel`, and `guild-mission` itself | Skills |
-| `workflows/mission-control.js` | The one loop that runs every mission: workers, cross-model validators, one scoped fix, escalation | Mission Control |
-| `templates/mission/` | `mission.md`, `contract.md`, `features.json`, `backlog.md` | Mission files |
-| `schemas/` | The handoff every worker writes and the verdict every validator writes | Handoffs |
+| Folder | What it is |
+|---|---|
+| `crew/` | 26 role files: one job, one model, a tool boundary, a report format |
+| `skills/` | Procedures that turn a goal into a mission: `teardown`, `psych-lens`, `concept-sprint`, `character-design`, `story-bible`, `economy-sim`, `build-module`, `playtest-panel`, and `guild-mission` itself |
+| `workflows/mission-control.js` | The one loop that runs every mission: workers, cross-model validators, one scoped fix, escalation |
+| `templates/mission/` | `mission.md`, `contract.md`, `features.json`, `backlog.md` |
+| `schemas/` | The handoff every worker writes and the verdict every validator writes |
 | `docs/framework.md` | The full design: roster, mission model, orchestration patterns, the anti-loop rules | |
 
 ### The crew
